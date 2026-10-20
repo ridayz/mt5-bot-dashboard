@@ -70,6 +70,7 @@
         <div><label>Lot Awal</label><input id="c-initial_lot" type="number" step="0.01" min="0.01"></div>
         <div><label>Multiplier Layer</label><input id="c-lot_multiplier" type="number" step="0.1" min="1"></div>
         <div><label>Jarak Layer (points)</label><input id="c-layer_step_points" type="number" step="10" min="10"></div>
+        <div><label>Batas Loss Basket ($)</label><input id="c-max_basket_loss" type="number" step="5" min="0" title="0 = safety stop mati"></div>
       </div>
       <div class="row" style="margin-top:12px; gap:8px">
         <button class="btn-start" id="b-start">▶ Start Bot</button>
@@ -128,6 +129,7 @@ function fillConfig(c){
   $('c-initial_lot').value = c.initial_lot;
   $('c-lot_multiplier').value = c.lot_multiplier;
   $('c-layer_step_points').value = c.layer_step_points;
+  $('c-max_basket_loss').value = c.max_basket_loss != null ? c.max_basket_loss : 50;
 }
 
 async function api(path, body){
@@ -146,6 +148,7 @@ $('b-save').onclick = async () => {
     initial_lot: parseFloat($('c-initial_lot').value),
     lot_multiplier: parseFloat($('c-lot_multiplier').value),
     layer_step_points: parseInt($('c-layer_step_points').value),
+    max_basket_loss: parseFloat($('c-max_basket_loss').value) || 0,
   };
   await api('/api/config', cfg);
 };

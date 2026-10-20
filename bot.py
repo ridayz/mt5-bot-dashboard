@@ -28,8 +28,9 @@ DEFAULT_CONFIG = {
     "direction": "AUTO",       # AUTO (ikut trend EMA H1) | BUY | SELL
     "initial_lot": 0.01,
     "lot_multiplier": 1.0,     # 1.0 = flat, 1.5 = martingale ringan
-    "max_layers": 5,           # input user #1
+    "max_layers": 50,          # input user #1
     "basket_target": 5.0,      # input user #2, USD, default $5
+    "max_basket_loss": 50.0,   # safety: close-all + stop kalau floating <= -nilai ini (0 = mati)
     "layer_step_points": 300,  # jarak tambah layer (points)
     "point_value_fix": None,   # optional override
 }
@@ -225,6 +226,20 @@ def get_positions(symbol):
     return [p for p in poss if p.magic == MAGIC]
 
 
+def close_basket(poss, symbol, eff, pnl, note):
+    """Close semua posisi basket, catat riwayat. Return True kalau semua sukses."""
+    ok_all = True
+    for p in list(poss):
+        ok, msg = close_position(p, symbol)
+        if ok:
+            log("Close %s" % msg)
+        else:
+            ok_all = False
+            log("FAIL close %s: %s" % (p.ticket, msg))
+    record_history(eff, poss, pnl, note=note)
+    return ok_all
+
+
 def engine_tick():
     """One engine step. Runs every ~0.5s while running."""
     with LOCK:
@@ -274,22 +289,25 @@ def engine_tick():
     # --- Exit: basket PnL >= target -> close all ---
     if poss:
         pnl = sum(p.profit + p.swap for p in poss)  # float PnL basket
-        if pnl >= cfg["basket_target"]:
+        if cfg["basket_target"] > 0 and pnl >= cfg["basket_target"]:
             log("TARGET tercapai: basket PnL $%.2f >= $%.2f -> close all %d posisi"
                 % (pnl, cfg["basket_target"], len(poss)))
-            ok_all = True
-            for p in list(poss):
-                ok, msg = close_position(p, symbol)
-                if ok:
-                    log("Close %s" % msg)
-                else:
-                    ok_all = False
-                    log("FAIL close %s: %s" % (p.ticket, msg))
+            close_basket(poss, symbol, eff, pnl, note="")
             with LOCK:
                 state["cycles"] += 1
-            record_history(eff, poss, pnl)
             time.sleep(1)
             return  # siklus baru mulai di tick berikutnya
+
+        # --- Safety stop: floating loss tembus batas -> close all + stop bot ---
+        loss_limit = abs(cfg.get("max_basket_loss") or 0)
+        if loss_limit > 0 and pnl <= -loss_limit:
+            log("SAFETY STOP: floating $%.2f <= -$%.2f -> close all %d posisi, BOT DIHENTIKAN"
+                % (pnl, loss_limit, len(poss)))
+            close_basket(poss, symbol, eff, pnl, note="stop-loss")
+            with LOCK:
+                state["running"] = False
+            time.sleep(1)
+            return
 
         # --- Entry layering ---
         # Entry terakhir = entry TERBARU (paling jauh melawan harga):
