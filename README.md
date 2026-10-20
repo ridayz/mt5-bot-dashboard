@@ -19,6 +19,8 @@ Bot layering (grid) + dashboard web lokal untuk **terminal MetaTrader 5 broker a
 - **Exit:** seluruh basket di-close otomatis begitu **PnL basket >= Target ($)**, default **$5**. Lalu siklus baru mulai.
 - **Safety spike:** kalau floating basket **jatuh ≥ `Spike Drop` (default $50) dalam `Window Spike` (default 10 detik)**, semua posisi di-close dan bot berhenti (tercatat note `spike`). Turun pelan-pelan tidak memicu ini.
 - **Safety statis (opsional):** `Batas Loss Basket` (default **0 = mati**) — kalau diisi, basket di-close ketika floating ≤ nilai negatifnya (note `stop-loss`).
+- **Trailing stop (opsional):** aktifkan di dashboard. Setelah peak profit basket ≥ `Aktif setelah profit`, basket di-close kalau floating turun sebesar `Trailing (%)` dari peak (note `trailing`).
+- **Drawdown:** dashboard menampilkan drawdown equity hari ini dan max drawdown sepanjang masa (disimpan di `dd.json`, riwayat harian 90 hari).
 - Semua posisi bot ditandai `magic 972025`, jadi aman campur dengan posisi manual / bot lain.
 
 ## File

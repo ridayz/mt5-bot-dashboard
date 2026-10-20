@@ -56,6 +56,8 @@
       <div class="stat"><b id="st-float">-</b><span>Floating PnL</span></div>
       <div class="stat"><b id="st-basketpnl">-</b><span>PnL Basket (bot)</span></div>
       <div class="stat"><b id="st-cycles">0</b><span>Cycles ditutup</span></div>
+      <div class="stat"><b id="st-dd-today" class="muted">-</b><span>Drawdown Hari Ini</span></div>
+      <div class="stat"><b id="st-dd-all" class="muted">-</b><span>Max Drawdown</span></div>
     </div>
   </div>
 
@@ -73,6 +75,9 @@
         <div><label>Batas Loss Basket ($)</label><input id="c-max_basket_loss" type="number" step="5" min="0" title="0 = safety statis mati"></div>
         <div><label>Spike Drop ($)</label><input id="c-spike_drop" type="number" step="5" min="0" title="close kalau floating jatuh secepat ini"></div>
         <div><label>Window Spike (detik)</label><input id="c-spike_window_sec" type="number" step="1" min="5"></div>
+        <div><label>Trailing Stop</label><select id="c-trail_enabled"><option value="false">OFF</option><option value="true">ON</option></select></div>
+        <div><label>Trailing (%)</label><input id="c-trail_pct" type="number" step="5" min="1" title="close kalau floating turun X% dari peak"></div>
+        <div><label>Aktif setelah profit ($)</label><input id="c-trail_activate" type="number" step="1" min="0" title="trailing baru jalan setelah peak profit >= nilai ini"></div>
       </div>
       <div class="row" style="margin-top:12px; gap:8px">
         <button class="btn-start" id="b-start">▶ Start Bot</button>
@@ -90,6 +95,7 @@
         <div class="stat"><b id="bk-vol">0.00</b><span>Total lot</span></div>
         <div class="stat"><b id="bk-last">-</b><span>Entry terakhir</span></div>
         <div class="stat"><b id="bk-next">-</b><span>Trigger layer berikut</span></div>
+        <div class="stat"><b id="bk-peak">-</b><span>Peak floating siklus</span></div>
       </div>
       <div id="trendline" class="muted" style="margin-top:10px; font-size:12px"></div>
     </div>
@@ -134,6 +140,9 @@ function fillConfig(c){
   $('c-max_basket_loss').value = c.max_basket_loss != null ? c.max_basket_loss : 0;
   $('c-spike_drop').value = c.spike_drop != null ? c.spike_drop : 50;
   $('c-spike_window_sec').value = c.spike_window_sec != null ? c.spike_window_sec : 10;
+  $('c-trail_enabled').value = c.trail_enabled ? 'true' : 'false';
+  $('c-trail_pct').value = c.trail_pct != null ? c.trail_pct : 30;
+  $('c-trail_activate').value = c.trail_activate != null ? c.trail_activate : 5;
 }
 
 async function api(path, body){
@@ -155,6 +164,9 @@ $('b-save').onclick = async () => {
     max_basket_loss: parseFloat($('c-max_basket_loss').value) || 0,
     spike_drop: parseFloat($('c-spike_drop').value) || 0,
     spike_window_sec: parseFloat($('c-spike_window_sec').value) || 10,
+    trail_enabled: $('c-trail_enabled').value === 'true',
+    trail_pct: parseFloat($('c-trail_pct').value) || 0,
+    trail_activate: parseFloat($('c-trail_activate').value) || 0,
   };
   await api('/api/config', cfg);
 };
@@ -184,6 +196,11 @@ async function tick(){
     const fp = $('st-float'); fp.textContent = floatPnl == null ? '-' : fmtMoney(floatPnl); fp.className = floatPnl >= 0 ? 'pos' : 'neg';
     const bp = $('st-basketpnl'); bp.textContent = fmtMoney(s.basket.pnl); bp.className = cls(s.basket.pnl);
     $('st-cycles').textContent = s.cycles;
+    const ddt = s.dd_today || {}, dda = s.dd_all || {};
+    $('st-dd-today').textContent = `-$${(ddt.max_dd || 0).toFixed(2)} (${(ddt.max_dd_pct || 0).toFixed(1)}%)`;
+    $('st-dd-today').className = (ddt.max_dd || 0) > 0 ? 'neg' : 'muted';
+    $('st-dd-all').textContent = `-$${(dda.max_dd || 0).toFixed(2)} (${(dda.max_dd_pct || 0).toFixed(1)}%)`;
+    $('st-dd-all').className = (dda.max_dd || 0) > 0 ? 'neg' : 'muted';
     $('runstate').textContent = s.running ? '● BOT JALAN' : '○ bot berhenti';
     $('runstate').style.color = s.running ? 'var(--green)' : 'var(--dim)';
 
@@ -191,6 +208,7 @@ async function tick(){
     $('bk-vol').textContent = s.basket.volume.toFixed(2);
     $('bk-last').textContent = s.basket.last_entry != null ? s.basket.last_entry : '-';
     $('bk-next').textContent = s.basket.next_layer_price != null ? s.basket.next_layer_price : (s.basket.layers >= s.config.max_layers ? 'full' : '-');
+    $('bk-peak').textContent = (s.cycle_peak_pnl != null ? s.cycle_peak_pnl : 0).toFixed(2);
 
     const t = s.trend;
     if (t && t.dir){

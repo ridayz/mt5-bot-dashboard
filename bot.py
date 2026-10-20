@@ -33,6 +33,9 @@ DEFAULT_CONFIG = {
     "max_basket_loss": 0.0,    # safety statis: close kalau floating <= -nilai ini (0 = mati)
     "spike_drop": 50.0,        # safety spike: close kalau floating turun secepat ini (USD) ...
     "spike_window_sec": 10.0,  # ... dalam jendela detik ini
+    "trail_enabled": False,    # trailing stop basket (persen dari peak floating)
+    "trail_pct": 30.0,         # close kalau floating turun X% dari peak siklus
+    "trail_activate": 5.0,     # trailing baru aktif setelah peak profit >= ini (USD)
     "layer_step_points": 300,  # jarak tambah layer (points)
     "point_value_fix": None,   # optional override
 }
@@ -49,6 +52,8 @@ state = {
     "cycles": 0,
     "history": [],
     "pnl_hist": [],
+    "cycle_peak_pnl": 0.0,
+    "dd": {"all_time": {"peak": 0.0, "max_dd": 0.0, "max_dd_pct": 0.0, "date": None}, "daily": {}},
     "log": [],
     "server_time": time.time(),
 }
@@ -75,6 +80,62 @@ def save_config():
         path = os.path.join(BASE_DIR, "config.json")
         with open(path, "w", encoding="utf-8") as f:
             json.dump(config, f, indent=2)
+
+
+DD_FILE = os.path.join(BASE_DIR, "dd.json")
+
+
+def load_dd():
+    if os.path.exists(DD_FILE):
+        try:
+            with open(DD_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, dict) and "all_time" in data:
+                with LOCK:
+                    state["dd"] = data
+        except Exception as e:
+            LOG.warning("dd.json rusak, mulai baru: %s", e)
+
+
+def save_dd():
+    try:
+        with LOCK:
+            data = json.loads(json.dumps(state["dd"]))
+        with open(DD_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        LOG.warning("gagal simpan dd.json: %s", e)
+
+
+def update_drawdown(equity):
+    """Update drawdown harian & sepanjang masa dari equity akun."""
+    today = time.strftime("%Y-%m-%d")
+    changed = False
+    with LOCK:
+        dd = state["dd"]
+        at = dd.setdefault("all_time", {"peak": 0.0, "max_dd": 0.0, "max_dd_pct": 0.0, "date": today})
+        if equity > at["peak"]:
+            at["peak"] = round(equity, 2)
+        drop = at["peak"] - equity
+        if drop > at["max_dd"]:
+            at["max_dd"] = round(drop, 2)
+            at["max_dd_pct"] = round(drop / at["peak"] * 100, 2) if at["peak"] else 0.0
+            at["date"] = today
+            changed = True
+        day = dd.setdefault("daily", {}).setdefault(
+            today, {"peak": 0.0, "max_dd": 0.0, "max_dd_pct": 0.0})
+        if equity > day["peak"]:
+            day["peak"] = round(equity, 2)
+        drop_d = day["peak"] - equity
+        if drop_d > day["max_dd"]:
+            day["max_dd"] = round(drop_d, 2)
+            day["max_dd_pct"] = round(drop_d / day["peak"] * 100, 2) if day["peak"] else 0.0
+            changed = True
+        if len(dd.get("daily", {})) > 90:
+            for k in sorted(dd["daily"])[:-90]:
+                dd["daily"].pop(k, None)
+    if changed:
+        save_dd()
 
 
 def log(msg):
@@ -306,6 +367,7 @@ def engine_tick():
             with LOCK:
                 state["cycles"] += 1
                 state["pnl_hist"] = []
+                state["cycle_peak_pnl"] = 0.0
             time.sleep(1)
             return  # siklus baru mulai di tick berikutnya
 
@@ -329,6 +391,23 @@ def engine_tick():
             close_basket(poss, symbol, eff, pnl, note="spike")
             with LOCK:
                 state["running"] = False
+                state["pnl_hist"] = []
+            time.sleep(1)
+            return
+
+        # --- Trailing stop (persen dari peak floating siklus) ---
+        with LOCK:
+            peak = max(state["cycle_peak_pnl"], pnl)
+            state["cycle_peak_pnl"] = peak
+        t_on = bool(cfg.get("trail_enabled"))
+        t_pct = abs(float(cfg.get("trail_pct") or 0))
+        t_act = abs(float(cfg.get("trail_activate") or 0))
+        if t_on and t_pct > 0 and peak >= t_act and pnl <= peak * (1 - t_pct / 100.0):
+            log("TRAILING STOP: floating $%.2f turun >=%.0f%% dari peak $%.2f -> close all %d posisi"
+                % (pnl, t_pct, peak, len(poss)))
+            close_basket(poss, symbol, eff, pnl, note="trailing")
+            with LOCK:
+                state["cycle_peak_pnl"] = 0.0
                 state["pnl_hist"] = []
             time.sleep(1)
             return
@@ -361,6 +440,7 @@ def engine_tick():
         # --- Auto-entry: bot nyala & kosong -> buka posisi pertama ---
         with LOCK:
             state["pnl_hist"] = []
+            state["cycle_peak_pnl"] = 0.0
         vol = normalize_volume(symbol, cfg["initial_lot"])
         if trend["mode"].startswith("auto"):
             log("TREND: %s (EMA14 %s vs EMA50 %s, H1)" % (trend["dir"], trend["fast"], trend["slow"]))
@@ -393,6 +473,7 @@ def refresh_state():
                 "free_margin": round(account.margin_free, 2),
                 "is_demo": is_demo,
             }
+        update_drawdown(account.equity)
     poss = get_positions(symbol)
     pos_view = []
     for p in sorted(poss, key=lambda x: x.ticket):
@@ -448,9 +529,13 @@ class Handler(BaseHTTPRequestHandler):
             except FileNotFoundError:
                 self._send(404, b"dashboard.html hilang", "text/plain")
         elif path == "/api/state":
+            today = time.strftime("%Y-%m-%d")
             with LOCK:
                 snap = dict(state)
                 snap["config"] = dict(config)
+                snap["dd_today"] = dict(state["dd"]["daily"].get(
+                    today, {"peak": 0.0, "max_dd": 0.0, "max_dd_pct": 0.0}))
+                snap["dd_all"] = dict(state["dd"]["all_time"])
                 snap["server_time"] = time.time()
             self._send(200, snap)
         else:
@@ -509,6 +594,7 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     load_config()
+    load_dd()
     t = threading.Thread(target=engine_loop, daemon=True)
     t.start()
     httpd = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
