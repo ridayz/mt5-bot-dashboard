@@ -31,15 +31,15 @@ DEFAULT_CONFIG = {
     "direction": "AUTO",       # AUTO (ikut trend EMA H1) | BUY | SELL
     "initial_lot": 0.01,
     "lot_multiplier": 1.0,     # 1.0 = flat, 1.5 = martingale ringan
-    "max_layers": 50,          # input user #1
-    "basket_target": 5.0,      # input user #2, USD, default $5
+    "max_layers": 150,         # input user #1
+    "basket_target": 7.0,      # input user #2, USD
     "max_basket_loss": 0.0,    # safety statis: close kalau floating <= -nilai ini (0 = mati)
-    "spike_drop": 50.0,        # safety spike: close kalau floating turun secepat ini (USD) ...
+    "spike_drop": 5000.0,      # safety spike: close kalau floating turun secepat ini (USD) ...
     "spike_window_sec": 10.0,  # ... dalam jendela detik ini
     "trail_enabled": False,    # trailing stop basket (persen dari peak floating)
-    "trail_pct": 30.0,         # close kalau floating turun X% dari peak siklus
+    "trail_pct": 10.0,         # close kalau floating turun X% dari peak siklus
     "trail_activate": 5.0,     # trailing baru aktif setelah peak profit >= ini (USD)
-    "layer_step_points": 300,  # jarak tambah layer (points)
+    "layer_step_points": 50,   # jarak tambah layer (points)
     "point_value_fix": None,   # optional override
 }
 

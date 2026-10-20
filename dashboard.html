@@ -50,6 +50,12 @@
   .banner{padding:10px 12px; border-radius:10px; margin-bottom:12px; font-size:13px}
   .banner.err{background:#3d2331; color:#ffd7db; border:1px solid var(--red)}
   .banner.warn{background:#332e18; color:#f7e6b0; border:1px solid var(--amber)}
+  .tgl{display:inline-block; width:34px; height:18px; border-radius:9px; border:1px solid var(--border); background:#1a2750; cursor:pointer; position:relative; vertical-align:middle; padding:0}
+  .tgl::after{content:''; position:absolute; top:2px; left:2px; width:12px; height:12px; border-radius:50%; background:var(--dim); transition:left .15s}
+  .tgl.on{background:#0f3d33; border-color:#2ea043} .tgl.on::after{left:18px; background:var(--green)}
+  .tgl.off{background:#3d2331; border-color:var(--red)} .tgl.off::after{background:var(--red)}
+  .tgl-lbl{font-size:11px; color:var(--dim); vertical-align:middle; margin-left:4px}
+  .lbl-tgl{margin-right:8px}
   #log{font:11px/1.6 Consolas,monospace; color:var(--dim); max-height:180px; overflow-y:auto}  .muted{color:var(--dim)}
 </style>
 </head>
@@ -79,6 +85,11 @@
   <div class="row" style="margin-top:12px">
     <div class="panel" style="flex:3; min-width:330px">
       <h2>Konfigurasi Bot <span style="text-transform:none;letter-spacing:0">· <span id="cfgmode" class="muted">berlaku live tanpa restart</span></span></h2>
+      <div id="toggles" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; align-items:center">
+        <span class="lbl-tgl">Trailing:</span><button class="tgl on" id="t-trail" title="Trailing Stop: OFF"></button>
+        <span class="lbl-tgl">Spike:</span><button class="tgl on" id="t-spike" title="Safety Spike: OFF"></button>
+        <span class="lbl-tgl">Statis:</span><button class="tgl off" id="t-stat" title="Safety Statis: OFF"></button>
+      </div>
       <div class="grid2">
         <div><label>Symbol</label><input id="c-symbol"></div>
         <div><label>Arah</label><select id="c-direction"><option value="AUTO">AUTO (ikut trend)</option><option>BUY</option><option>SELL</option></select></div>
@@ -169,8 +180,15 @@ async function api(path, body){
   return r.json().catch(() => ({}));
 }
 
-$('b-save').onclick = async () => {
-  const cfg = {
+function setTgl(id, on){ const e = $(id); e.className = 'tgl ' + (on ? 'on' : 'off'); e.setAttribute('title', e.getAttribute('title').split(':')[0] + ': ' + (on?'ON':'OFF')); }
+
+let lastSpike = 0;
+$('t-trail').onclick = () => { const c = currentCfg(); c.trail_enabled = !c.trail_enabled; saveCfg(c); };
+$('t-spike').onclick = () => { const c = currentCfg(); if (c.spike_drop > 0) { lastSpike = c.spike_drop; c.spike_drop = 0; } else { c.spike_drop = lastSpike || 5000; } saveCfg(c); };
+$('t-stat').onclick  = () => { const c = currentCfg(); c.max_basket_loss = c.max_basket_loss > 0 ? 0 : 50; saveCfg(c); };
+
+function currentCfg(){
+  return {
     symbol: $('c-symbol').value.trim().toUpperCase(),
     direction: $('c-direction').value,
     basket_target: parseFloat($('c-basket_target').value),
@@ -185,8 +203,10 @@ $('b-save').onclick = async () => {
     trail_pct: parseFloat($('c-trail_pct').value) || 0,
     trail_activate: parseFloat($('c-trail_activate').value) || 0,
   };
-  await api('/api/config', cfg);
-};
+}
+async function saveCfg(cfg){ await api('/api/config', cfg); }
+
+$('b-save').onclick = () => saveCfg(currentCfg());
 $('b-start').onclick = () => api('/api/action', {action:'start'});
 $('b-stop').onclick  = () => api('/api/action', {action:'stop'});
 $('b-panic').onclick = () => {
@@ -236,6 +256,12 @@ async function tick(){
     } else { $('trendline').textContent = ''; }
 
     $('magiclbl').textContent = '972025';
+    // sync status toggle
+    const c = s.config;
+    setTgl('t-trail', c.trail_enabled);
+    setTgl('t-spike', c.spike_drop > 0);
+    setTgl('t-stat', c.max_basket_loss > 0);
+    if (c.spike_drop > 0) lastSpike = c.spike_drop;
     $('posrows').innerHTML = s.positions.map(p =>
       `<tr><td>${p.ticket}</td><td>${p.type}</td><td>${p.volume}</td><td>${p.entry}</td><td>${p.current}</td><td class="${cls(p.profit)}">${fmtMoney(p.profit)}</td></tr>`
     ).join('');
