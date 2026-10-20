@@ -30,7 +30,9 @@ DEFAULT_CONFIG = {
     "lot_multiplier": 1.0,     # 1.0 = flat, 1.5 = martingale ringan
     "max_layers": 50,          # input user #1
     "basket_target": 5.0,      # input user #2, USD, default $5
-    "max_basket_loss": 50.0,   # safety: close-all + stop kalau floating <= -nilai ini (0 = mati)
+    "max_basket_loss": 0.0,    # safety statis: close kalau floating <= -nilai ini (0 = mati)
+    "spike_drop": 50.0,        # safety spike: close kalau floating turun secepat ini (USD) ...
+    "spike_window_sec": 10.0,  # ... dalam jendela detik ini
     "layer_step_points": 300,  # jarak tambah layer (points)
     "point_value_fix": None,   # optional override
 }
@@ -46,6 +48,7 @@ state = {
     "basket": {"count": 0, "volume": 0.0, "pnl": 0.0, "layers": 0, "last_entry": None, "next_layer_price": None},
     "cycles": 0,
     "history": [],
+    "pnl_hist": [],
     "log": [],
     "server_time": time.time(),
 }
@@ -289,16 +292,24 @@ def engine_tick():
     # --- Exit: basket PnL >= target -> close all ---
     if poss:
         pnl = sum(p.profit + p.swap for p in poss)  # float PnL basket
+        now = time.time()
+        with LOCK:
+            state["pnl_hist"].append((now, pnl))
+            win = max(5.0, float(cfg.get("spike_window_sec") or 10))
+            state["pnl_hist"] = [x for x in state["pnl_hist"] if now - x[0] <= max(win, 30)]
+            recent = [v for t, v in state["pnl_hist"] if now - t <= win]
+
         if cfg["basket_target"] > 0 and pnl >= cfg["basket_target"]:
             log("TARGET tercapai: basket PnL $%.2f >= $%.2f -> close all %d posisi"
                 % (pnl, cfg["basket_target"], len(poss)))
             close_basket(poss, symbol, eff, pnl, note="")
             with LOCK:
                 state["cycles"] += 1
+                state["pnl_hist"] = []
             time.sleep(1)
             return  # siklus baru mulai di tick berikutnya
 
-        # --- Safety stop: floating loss tembus batas -> close all + stop bot ---
+        # --- Safety statis (opsional): floating <= -limit -> close + stop ---
         loss_limit = abs(cfg.get("max_basket_loss") or 0)
         if loss_limit > 0 and pnl <= -loss_limit:
             log("SAFETY STOP: floating $%.2f <= -$%.2f -> close all %d posisi, BOT DIHENTIKAN"
@@ -306,6 +317,19 @@ def engine_tick():
             close_basket(poss, symbol, eff, pnl, note="stop-loss")
             with LOCK:
                 state["running"] = False
+                state["pnl_hist"] = []
+            time.sleep(1)
+            return
+
+        # --- Safety spike: floating jatuh cepat dalam jendela singkat ---
+        spike_drop = abs(cfg.get("spike_drop") or 0)
+        if spike_drop > 0 and recent and (max(recent) - pnl) >= spike_drop:
+            log("SPIKE terdeteksi: floating turun $%.2f dalam <=%.0fs (peak $%.2f -> $%.2f) -> close all + STOP"
+                % (max(recent) - pnl, win, max(recent), pnl))
+            close_basket(poss, symbol, eff, pnl, note="spike")
+            with LOCK:
+                state["running"] = False
+                state["pnl_hist"] = []
             time.sleep(1)
             return
 
@@ -335,6 +359,8 @@ def engine_tick():
                 state["basket"]["next_layer_price"] = round(nxt, si.digits)
     else:
         # --- Auto-entry: bot nyala & kosong -> buka posisi pertama ---
+        with LOCK:
+            state["pnl_hist"] = []
         vol = normalize_volume(symbol, cfg["initial_lot"])
         if trend["mode"].startswith("auto"):
             log("TREND: %s (EMA14 %s vs EMA50 %s, H1)" % (trend["dir"], trend["fast"], trend["slow"]))

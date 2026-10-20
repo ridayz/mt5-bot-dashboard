@@ -17,7 +17,8 @@ Bot layering (grid) + dashboard web lokal untuk **terminal MetaTrader 5 broker a
 - **Auto-entry:** pas bot di-Start dan tidak ada posisi, langsung buka posisi pertama (arah sesuai config).
 - **Layering:** kalau harga jalan melawan di `Jarak Layer (points)`, buka layer baru (lot awal x multiplier per layer), max `Max Layer`.
 - **Exit:** seluruh basket di-close otomatis begitu **PnL basket >= Target ($)**, default **$5**. Lalu siklus baru mulai.
-- **Safety stop:** kalau floating basket tembus **-Batas Loss Basket** (default **$50**), semua posisi bot di-close dan bot otomatis berhenti. Isi `0` buat mematikan fitur ini.
+- **Safety spike:** kalau floating basket **jatuh ≥ `Spike Drop` (default $50) dalam `Window Spike` (default 10 detik)**, semua posisi di-close dan bot berhenti (tercatat note `spike`). Turun pelan-pelan tidak memicu ini.
+- **Safety statis (opsional):** `Batas Loss Basket` (default **0 = mati**) — kalau diisi, basket di-close ketika floating ≤ nilai negatifnya (note `stop-loss`).
 - Semua posisi bot ditandai `magic 972025`, jadi aman campur dengan posisi manual / bot lain.
 
 ## File

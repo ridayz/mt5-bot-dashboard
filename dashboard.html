@@ -70,7 +70,9 @@
         <div><label>Lot Awal</label><input id="c-initial_lot" type="number" step="0.01" min="0.01"></div>
         <div><label>Multiplier Layer</label><input id="c-lot_multiplier" type="number" step="0.1" min="1"></div>
         <div><label>Jarak Layer (points)</label><input id="c-layer_step_points" type="number" step="10" min="10"></div>
-        <div><label>Batas Loss Basket ($)</label><input id="c-max_basket_loss" type="number" step="5" min="0" title="0 = safety stop mati"></div>
+        <div><label>Batas Loss Basket ($)</label><input id="c-max_basket_loss" type="number" step="5" min="0" title="0 = safety statis mati"></div>
+        <div><label>Spike Drop ($)</label><input id="c-spike_drop" type="number" step="5" min="0" title="close kalau floating jatuh secepat ini"></div>
+        <div><label>Window Spike (detik)</label><input id="c-spike_window_sec" type="number" step="1" min="5"></div>
       </div>
       <div class="row" style="margin-top:12px; gap:8px">
         <button class="btn-start" id="b-start">▶ Start Bot</button>
@@ -129,7 +131,9 @@ function fillConfig(c){
   $('c-initial_lot').value = c.initial_lot;
   $('c-lot_multiplier').value = c.lot_multiplier;
   $('c-layer_step_points').value = c.layer_step_points;
-  $('c-max_basket_loss').value = c.max_basket_loss != null ? c.max_basket_loss : 50;
+  $('c-max_basket_loss').value = c.max_basket_loss != null ? c.max_basket_loss : 0;
+  $('c-spike_drop').value = c.spike_drop != null ? c.spike_drop : 50;
+  $('c-spike_window_sec').value = c.spike_window_sec != null ? c.spike_window_sec : 10;
 }
 
 async function api(path, body){
@@ -149,6 +153,8 @@ $('b-save').onclick = async () => {
     lot_multiplier: parseFloat($('c-lot_multiplier').value),
     layer_step_points: parseInt($('c-layer_step_points').value),
     max_basket_loss: parseFloat($('c-max_basket_loss').value) || 0,
+    spike_drop: parseFloat($('c-spike_drop').value) || 0,
+    spike_window_sec: parseFloat($('c-spike_window_sec').value) || 10,
   };
   await api('/api/config', cfg);
 };
