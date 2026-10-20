@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Palette Lab — MT5 Dashboard</title>
+<style>
+  body{margin:0;padding:18px;background:#0a0a0f;color:#e8e8f0;font:13px/1.45 "Segoe UI",system-ui,sans-serif}
+  h1{font-size:16px;margin:0 0 14px}
+  .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px}
+  .col{border-radius:12px;padding:14px}
+  .name{font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.75;margin-bottom:8px}
+  .sw{display:flex;gap:6px;margin-bottom:12px}
+  .sw i{width:22px;height:22px;border-radius:6px;display:block;border:1px solid rgba(255,255,255,.12)}
+  .card{border-radius:10px;padding:12px;margin-bottom:10px}
+  .stats{display:flex;gap:16px;flex-wrap:wrap}
+  .stat b{display:block;font-size:19px;font-variant-numeric:tabular-nums}
+  .stat span{font-size:10px;text-transform:uppercase;letter-spacing:.05em;opacity:.7}
+  .pos{color:var(--green)} .neg{color:var(--red)}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .btn{border:none;border-radius:8px;padding:7px 14px;font-weight:600;font-size:12px;white-space:nowrap}
+  .b1{background:var(--green);color:var(--ongreen)}
+  .b2{background:var(--red);color:var(--onred)}
+  .b3{background:var(--blue);color:var(--onblue)}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  th{font-size:10px;text-align:left;padding:5px 6px;opacity:.65;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
+  td{padding:5px 6px;border-bottom:1px solid var(--border2);font-size:12px}
+  .pill{display:inline-block;padding:1px 9px;border-radius:999px;font-size:11px;font-weight:600}
+</style>
+</head>
+<body>
+<h1>Palette Lab — pilih yang paling enak buat mata</h1>
+<div class="wrap">
+
+  <!-- A -->
+  <div class="col" style="--green:#b9f5d8;--red:#ffb7c5;--blue:#c7bfff;--border:#332b52;--border2:#2a2344;--ongreen:#142a26;--onred:#3a1c26;--onblue:#241d3d;background:#131020">
+    <div class="name">A · Lavender Dream</div>
+    <div class="sw">
+      <i style="background:#131020"></i><i style="background:#1b1730"></i><i style="background:#b9f5d8"></i><i style="background:#ffb7c5"></i><i style="background:#c7bfff"></i><i style="background:#ffe7a8"></i>
+    </div>
+    <div class="card" style="background:#1b1730">
+      <span class="pill" style="background:#25304a;color:#c7bfff">● MT5 Terhubung</span>
+      <span class="pill" style="background:#2c2444;color:#c7bfff">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b>2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#1b1730">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- B -->
+  <div class="col" style="--green:#a8e6c1;--red:#ffb9a3;--blue:#a8d8f0;--border:#3a2f26;--border2:#30261f;--ongreen:#132a1f;--onred:#3d2018;--onblue:#162b36;background:#14100e">
+    <div class="name">B · Warm Charcoal</div>
+    <div class="sw">
+      <i style="background:#14100e"></i><i style="background:#1d1815"></i><i style="background:#a8e6c1"></i><i style="background:#ffb9a3"></i><i style="background:#a8d8f0"></i><i style="background:#f7d9a0"></i>
+    </div>
+    <div class="card" style="background:#1d1815">
+      <span class="pill" style="background:#243a30;color:#a8e6c1">● MT5 Terhubung</span>
+      <span class="pill" style="background:#26323d;color:#a8d8f0">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b>2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#1d1815">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- C -->
+  <div class="col" style="--green:#9cf0d4;--red:#ffb0b8;--blue:#9ed8ff;--border:#1f3d45;--border2:#193238;--ongreen:#0f2a25;--onred:#3a1d22;--onblue:#12293a;background:#0a1417">
+    <div class="name">C · Ocean Mint</div>
+    <div class="sw">
+      <i style="background:#0a1417"></i><i style="background:#102026"></i><i style="background:#9cf0d4"></i><i style="background:#ffb0b8"></i><i style="background:#9ed8ff"></i><i style="background:#ffe2a8"></i>
+    </div>
+    <div class="card" style="background:#102026">
+      <span class="pill" style="background:#153630;color:#9cf0d4">● MT5 Terhubung</span>
+      <span class="pill" style="background:#16303a;color:#9ed8ff">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b>2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#102026">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- D -->
+  <div class="col" style="--green:#b5ecd9;--red:#ffc0c8;--blue:#bcd9ff;--border:#2b3a52;--border2:#243246;--ongreen:#14262d;--onred:#3a2028;--onblue:#182e4a;background:#0c1220">
+    <div class="name">D · Biru Awan (Cloud Blue)</div>
+    <div class="sw">
+      <i style="background:#0c1220"></i><i style="background:#141d2e"></i><i style="background:#bcd9ff"></i><i style="background:#b5ecd9"></i><i style="background:#ffc0c8"></i><i style="background:#ffe4b0"></i>
+    </div>
+    <div class="card" style="background:#141d2e">
+      <span class="pill" style="background:#1e3348;color:#bcd9ff">● MT5 Terhubung</span>
+      <span class="pill" style="background:#20304f;color:#bcd9ff">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b>2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#141d2e">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- E -->
+  <div class="col" style="--green:#c9e88f;--red:#ffc8d6;--blue:#d8d2ff;--border:#3f3f4d;--border2:#343442;--ongreen:#26301a;--onred:#3a2230;--onblue:#2a2740;background:#121216">
+    <div class="name">E · Putih Susu (Milk)</div>
+    <div class="sw">
+      <i style="background:#121216"></i><i style="background:#1c1c22"></i><i style="background:#f2f0ec"></i><i style="background:#c9e88f"></i><i style="background:#ffc8d6"></i><i style="background:#d8d2ff"></i>
+    </div>
+    <div class="card" style="background:#1c1c22">
+      <span class="pill" style="background:#2a3324;color:#c9e88f">● MT5 Terhubung</span>
+      <span class="pill" style="background:#2c2a3d;color:#d8d2ff">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b style="color:#f2f0ec">2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#1c1c22">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- F -->
+  <div class="col" style="--green:#a7eed6;--red:#ffb2c0;--blue:#c9c4ff;--border:#2a3b3f;--border2:#233236;--ongreen:#122a25;--onred:#3a1e26;--onblue:#221f3a;background:#0a1516">
+    <div class="name">F · Awan Senja (Cloud Dusk)</div>
+    <div class="sw">
+      <i style="background:#0a1516"></i><i style="background:#132124"></i><i style="background:#c9c4ff"></i><i style="background:#a7eed6"></i><i style="background:#ffb2c0"></i><i style="background:#ffd9a8"></i>
+    </div>
+    <div class="card" style="background:#132124">
+      <span class="pill" style="background:#1c3336;color:#a7eed6">● MT5 Terhubung</span>
+      <span class="pill" style="background:#252347;color:#c9c4ff">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b>2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#132124">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- G -->
+  <div class="col" style="--green:#b6f0c4;--red:#ffc2b0;--blue:#b8e0ff;--border:#33335e;--border2:#2a2a4d;--ongreen:#16291d;--onred:#3a2418;--onblue:#162b40;background:#0d0d1a">
+    <div class="name">G · Biru Langit Malam (Sky Night)</div>
+    <div class="sw">
+      <i style="background:#0d0d1a"></i><i style="background:#171729"></i><i style="background:#b8e0ff"></i><i style="background:#b6f0c4"></i><i style="background:#ffc2b0"></i><i style="background:#e0d4ff"></i>
+    </div>
+    <div class="card" style="background:#171729">
+      <span class="pill" style="background:#1f2c44;color:#b8e0ff">● MT5 Terhubung</span>
+      <span class="pill" style="background:#2c2444;color:#e0d4ff">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b>2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#171729">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- H -->
+  <div class="col" style="--green:#aef0d8;--red:#ffbcc4;--blue:#c6e2ff;--border:#2f3540;--border2:#282d37;--ongreen:#122b25;--onred:#3a2027;--onblue:#17283a;background:#0e1116">
+    <div class="name">H · Putih Tulang (Bone)</div>
+    <div class="sw">
+      <i style="background:#0e1116"></i><i style="background:#171b22"></i><i style="background:#e8e4dc"></i><i style="background:#c6e2ff"></i><i style="background:#aef0d8"></i><i style="background:#ffbcc4"></i>
+    </div>
+    <div class="card" style="background:#171b22">
+      <span class="pill" style="background:#1f3330;color:#aef0d8">● MT5 Terhubung</span>
+      <span class="pill" style="background:#1e3040;color:#c6e2ff">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b style="color:#e8e4dc">2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#171b22">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- I -->
+  <div class="col" style="--green:#b0d6c4;--red:#e6aab2;--blue:#a9c6e8;--border:#3a3f48;--border2:#32363e;--ongreen:#1b2b24;--onred:#33222a;--onblue:#1f2b3a;background:#15171b">
+    <div class="name">I · Pastel Redup (Muted)</div>
+    <div class="sw">
+      <i style="background:#15171b"></i><i style="background:#1f2228"></i><i style="background:#b0d6c4"></i><i style="background:#e6aab2"></i><i style="background:#a9c6e8"></i><i style="background:#dcd1a8"></i>
+    </div>
+    <div class="card" style="background:#1f2228">
+      <span class="pill" style="background:#28342d;color:#b0d6c4">● MT5 Terhubung</span>
+      <span class="pill" style="background:#28323e;color:#a9c6e8">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b>2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#1f2228">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- J -->
+  <div class="col" style="--green:#d7f0a8;--red:#ffb8b8;--blue:#bfe0ff;--border:#3b3a2a;--border2:#333224;--ongreen:#2b2a12;--onred:#3a1e1e;--onblue:#1b2a3a;background:#121109">
+    <div class="name">J · Item Lemon Putih 🍋</div>
+    <div class="sw">
+      <i style="background:#121109"></i><i style="background:#1c1a0f"></i><i style="background:#f5f2e6"></i><i style="background:#fdf0a8"></i><i style="background:#d7f0a8"></i><i style="background:#ffe4b8"></i>
+    </div>
+    <div class="card" style="background:#1c1a0f">
+      <span class="pill" style="background:#2c2a14;color:#fdf0a8">● MT5 Terhubung</span>
+      <span class="pill" style="background:#2a3020;color:#d7f0a8">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b style="color:#f5f2e6">2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#1c1a0f">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- K -->
+  <div class="col" style="--green:#a8ecd8;--red:#ffbcbe;--blue:#b8dcff;--border:#26384d;--border2:#20303f;--ongreen:#0f2a25;--onred:#3a1f22;--onblue:#16283c;background:#0b1320">
+    <div class="name">K · Biru Awan Putih ☁️</div>
+    <div class="sw">
+      <i style="background:#0b1320"></i><i style="background:#141e2e"></i><i style="background:#f7f4ee"></i><i style="background:#b8dcff"></i><i style="background:#a8ecd8"></i><i style="background:#c9c4ff"></i>
+    </div>
+    <div class="card" style="background:#141e2e">
+      <span class="pill" style="background:#1e3348;color:#b8dcff">● MT5 Terhubung</span>
+      <span class="pill" style="background:#1e3040;color:#f7f4ee">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b style="color:#f7f4ee">2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#141e2e">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- L -->
+  <div class="col" style="--green:#cdeaa8;--red:#f8bcae;--blue:#c6dcf5;--border:#3a3a38;--border2:#32322f;--ongreen:#242a16;--onred:#332420;--onblue:#1e2733;background:#101012">
+    <div class="name">L · Putih Lemon Soft</div>
+    <div class="sw">
+      <i style="background:#101012"></i><i style="background:#1a1a1c"></i><i style="background:#efeee9"></i><i style="background:#f2eab0"></i><i style="background:#cdeaa8"></i><i style="background:#c6dcf5"></i>
+    </div>
+    <div class="card" style="background:#1a1a1c">
+      <span class="pill" style="background:#2a2a20;color:#f2eab0">● MT5 Terhubung</span>
+      <span class="pill" style="background:#222b30;color:#c6dcf5">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b style="color:#efeee9">2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#1a1a1c">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- M -->
+  <div class="col" style="--green:#a8f0d8;--red:#ffb6c6;--blue:#bcd6ff;--border:#2c3a63;--border2:#26324f;--ongreen:#14291f;--onred:#3a1e2b;--onblue:#182a4a;background:#101a33">
+    <div class="name">M · Royal Pastel (adaptasi, dark)</div>
+    <div class="sw">
+      <i style="background:#101a33"></i><i style="background:#1a2748"></i><i style="background:#bcd6ff"></i><i style="background:#b0e3ff"></i><i style="background:#a8f0e4"></i><i style="background:#ffe9a8"></i>
+    </div>
+    <div class="card" style="background:#1a2748">
+      <span class="pill" style="background:#22304f;color:#bcd6ff">● MT5 Terhubung</span>
+      <span class="pill" style="background:#1e3a44;color:#a8f0e4">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b style="color:#eef2ff">2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#1a2748">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- N -->
+  <div class="col" style="--green:#b6f0c4;--red:#ffc2c8;--blue:#b8d4ff;--border:#333f7a;--border2:#2b3566;--ongreen:#152a1d;--onred:#3a1f24;--onblue:#182750;background:#1a2350">
+    <div class="name">N · Royal Pastel (bg biru penuh)</div>
+    <div class="sw">
+      <i style="background:#1a2350"></i><i style="background:#242f6b"></i><i style="background:#b8d4ff"></i><i style="background:#a8ece8"></i><i style="background:#b6f0c4"></i><i style="background:#ffe6a0"></i>
+    </div>
+    <div class="card" style="background:#242f6b">
+      <span class="pill" style="background:#2f3d80;color:#b8d4ff">● MT5 Terhubung</span>
+      <span class="pill" style="background:#2a4a55;color:#a8ece8">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b style="color:#eaefff">2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#242f6b">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- O -->
+  <div class="col" style="--green:#9fe8c8;--red:#ffb3c0;--blue:#a9d4ff;--border:#2d4a63;--border2:#254055;--ongreen:#12302a;--onred:#3a1e26;--onblue:#142a44;background:#0f1e2e">
+    <div class="name">O · Sky–Turquoise Pastel</div>
+    <div class="sw">
+      <i style="background:#0f1e2e"></i><i style="background:#172a3e"></i><i style="background:#a9d4ff"></i><i style="background:#9ff0ea"></i><i style="background:#9fe8c8"></i><i style="background:#ffe3a6"></i>
+    </div>
+    <div class="card" style="background:#172a3e">
+      <span class="pill" style="background:#1d3a52;color:#a9d4ff">● MT5 Terhubung</span>
+      <span class="pill" style="background:#17404a;color:#9ff0ea">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b style="color:#eaf2f9">2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#172a3e">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- P -->
+  <div class="col" style="--green:#b0efd9;--red:#ffc4cc;--blue:#c3d8ff;--border:#3a3a5c;--border2:#32324f;--ongreen:#152b25;--onred:#3a2028;--onblue:#1b2547;background:#121329">
+    <div class="name">P · Cobalt Pastel (biru tua + lavender)</div>
+    <div class="sw">
+      <i style="background:#121329"></i><i style="background:#1c1d3d"></i><i style="background:#c3d8ff"></i><i style="background:#c8c2ff"></i><i style="background:#b0efd9"></i><i style="background:#ffe7a8"></i>
+    </div>
+    <div class="card" style="background:#1c1d3d">
+      <span class="pill" style="background:#252a5c;color:#c3d8ff">● MT5 Terhubung</span>
+      <span class="pill" style="background:#2b2551;color:#c8c2ff">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b style="color:#ecedfa">2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#1c1d3d">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- Q -->
+  <div class="col" style="--green:#a2e9c4;--red:#ffb0be;--blue:#b8d9ff;--border:#2a4a55;--border2:#234049;--ongreen:#12301f;--onred:#3a1d25;--onblue:#152a45;background:#0a1f26">
+    <div class="name">Q · Turquoise–Mint Pastel</div>
+    <div class="sw">
+      <i style="background:#0a1f26"></i><i style="background:#122b33"></i><i style="background:#a2f0ee"></i><i style="background:#a2e9c4"></i><i style="background:#b8d9ff"></i><i style="background:#ffe4a8"></i>
+    </div>
+    <div class="card" style="background:#122b33">
+      <span class="pill" style="background:#1b3d45;color:#a2f0ee">● MT5 Terhubung</span>
+      <span class="pill" style="background:#1c3a3a;color:#a2e9c4">DEMO</span>
+      <div class="stats" style="margin-top:10px">
+        <div class="stat"><b style="color:#e8f5f4">2.962,85</b><span>Balance</span></div>
+        <div class="stat"><b class="pos">+$7,84</b><span>Floating</span></div>
+        <div class="stat"><b class="neg">-$12,40</b><span>Max DD</span></div>
+      </div>
+      <div class="btns"><button class="btn b1">Start Bot</button><button class="btn b2">Stop</button><button class="btn b3">Simpan</button></div>
+    </div>
+    <div class="card" style="background:#122b33">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+    </div>
+  </div>
+
+  <!-- R -->
+  <div class="col" style="--green:#8fe8c0;--red:#ffb0c0;--blue:#8fbcff;--border:#2f3d6e;--border2:#283463;--ongreen:#0f2a20;--onred:#3a1c26;--onblue:#14264d;background:#0e1730">
+    <div class="name">R · CAMPURAN: Royal · Sky · Turquoise · Mint</div>
+    <div class="sw">
+      <i style="background:#2d54d8" title="royal"></i><i style="background:#52b6f8" title="sky"></i><i style="background:#00c8d7" title="turquoise"></i><i style="background:#00c29a" title="mint"></i><i style="background:#ecc22b" title="amber"></i><i style="background:#eef3fb" title="offwhite"></i>
+    </div>
+    <!-- navbar royal -->
+    <div class="card" style="background:#22399e;padding:8px 10px">
+      <span class="pill" style="background:#2f4cc4;color:#dbe6ff">MT5 Auto Bot</span>
+      <span class="pill" style="background:#8fbcff;color:#14264d">● Terhubung</span>
+      <span class="pill" style="background:#8fe8c0;color:#0f2a20">DEMO</span>
+    </div>
+    <!-- kartu metrik warna-warni -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <div style="background:#2f52cf;border-radius:10px;padding:10px">
+        <div style="font-size:10px;opacity:.85;text-transform:uppercase;letter-spacing:.06em">Balance</div>
+        <div style="font-size:18px;font-weight:700;color:#eaf0ff">2.962,85</div>
+      </div>
+      <div style="background:#3d8fd4;border-radius:10px;padding:10px">
+        <div style="font-size:10px;opacity:.85;text-transform:uppercase;letter-spacing:.06em">Equity</div>
+        <div style="font-size:18px;font-weight:700;color:#eaf4ff">2.970,69</div>
+      </div>
+      <div style="background:#0d8e9c;border-radius:10px;padding:10px">
+        <div style="font-size:10px;opacity:.85;text-transform:uppercase;letter-spacing:.06em">Floating</div>
+        <div style="font-size:18px;font-weight:700;color:#e6feff">+$7,84</div>
+      </div>
+      <div style="background:#0a8c72;border-radius:10px;padding:10px">
+        <div style="font-size:10px;opacity:.85;text-transform:uppercase;letter-spacing:.06em">Max DD</div>
+        <div style="font-size:18px;font-weight:700;color:#e3fff7">-$12,40</div>
+      </div>
+    </div>
+    <!-- panel utama -->
+    <div class="card" style="background:#141f42">
+      <table><tr><th>Type</th><th>Entry</th><th>Now</th><th>PnL</th></tr>
+      <tr><td>SELL</td><td>4124,17</td><td>4123,40</td><td class="pos">+$0,77</td></tr>
+      <tr><td>SELL</td><td>4123,52</td><td>4123,40</td><td class="pos">+$0,12</td></tr>
+      <tr><td>SELL</td><td>4122,35</td><td>4123,40</td><td class="neg">-$1,05</td></tr></table>
+      <div class="btns">
+        <button class="btn b1">Start Bot</button>
+        <button class="btn b2">Stop</button>
+        <button class="btn" style="background:#8fbcff;color:#14264d">Simpan</button>
+        <button class="btn" style="background:#f0d488;color:#3a2f10">Panic</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

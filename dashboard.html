@@ -6,41 +6,51 @@
 <title>MT5 Auto Bot Dashboard</title>
 <style>
   :root{
-    --bg:#0d1117; --panel:#161b22; --border:#30363d; --text:#e6edf3; --dim:#8b949e;
-    --green:#3fb950; --red:#f85149; --amber:#d29922; --blue:#58a6ff;
+    /* campuran royal · sky · turquoise · mint (pastel on dark) */
+    --bg:#0e1730; --panel:#141f42; --border:#2f3d6e; --text:#eef3fb; --dim:#a3b4d6;
+    --green:#8fe8c0; --red:#ffb0c0; --amber:#f0d488; --blue:#8fbcff;
+    --royal:#22399e; --sky:#3d8fd4; --turq:#0d8e9c; --mint:#0a8c72;
+    --card-royal:#2f52cf; --card-sky:#3d8fd4; --card-turq:#0d8e9c; --card-mint:#0a8c72; --card-amber:#a8892a;
   }
   *{box-sizing:border-box; margin:0; padding:0}
   body{background:var(--bg); color:var(--text); font:14px/1.45 "Segoe UI",system-ui,sans-serif; padding:14px}
   .row{display:flex; gap:12px; flex-wrap:wrap}
-  .panel{background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:14px}
-  h1{font-size:17px; margin-bottom:10px}
+  .panel{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px}
+  h1{font-size:17px; margin-bottom:10px; color:#eef3fb}
   h2{font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:8px}
   .pill{display:inline-block; padding:2px 10px; border-radius:999px; font-size:12px; font-weight:600}
-  .pill.on{background:#12331d; color:var(--green)}
-  .pill.off{background:#3a1d1d; color:var(--red)}
-  .pill.demo{background:#1a2c44; color:var(--blue)}
-  .pill.live{background:#441a1a; color:var(--red)}
+  .pill.on{background:#1c3d55; color:var(--blue)}
+  .pill.off{background:#3d2331; color:var(--red)}
+  .pill.demo{background:#1f3049; color:#cfe1ff}
+  .pill.live{background:#40262f; color:var(--red)}
   .stat{display:flex; flex-direction:column; gap:2px; min-width:110px}
   .stat b{font-size:20px; font-variant-numeric:tabular-nums}
   .stat span{color:var(--dim); font-size:11px; text-transform:uppercase; letter-spacing:.05em}
   .pos{color:var(--green)} .neg{color:var(--red)}
+  .metric .pos{color:#a8ffd8} .metric .neg{color:#ffc2cc} .metric .muted{color:#dbe6ff}  /* kartu metrik berwarna */
+  .metric{border-radius:12px; padding:12px 14px; min-width:130px; flex:1 1 140px; border:1px solid rgba(255,255,255,.1)}
+  .metric span{display:block; font-size:10px; text-transform:uppercase; letter-spacing:.06em; opacity:.9}
+  .metric b{font-size:21px; font-variant-numeric:tabular-nums; color:#f4f8ff}
+  .m-royal{background:var(--card-royal)} .m-sky{background:var(--card-sky)}
+  .m-turq{background:var(--card-turq)} .m-mint{background:var(--card-mint)}
+  .m-amber{background:var(--card-amber)} .m-plain{background:#1a2750}
   table{width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums}
+  td{white-space:nowrap}
   th{color:var(--dim); font-size:11px; text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); text-transform:uppercase; letter-spacing:.05em}
-  td{padding:6px 8px; border-bottom:1px solid #21262d}
+  td{padding:6px 8px; border-bottom:1px solid #283463}
   .grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px}
   label{display:block; font-size:11px; color:var(--dim); margin-bottom:3px}
-  input,select{width:100%; background:#0d1117; border:1px solid var(--border); color:var(--text); border-radius:6px; padding:6px 8px; font-size:13px}
+  input,select{width:100%; background-color:#101a38; border:1px solid var(--border); color:var(--text); border-radius:8px; padding:6px 8px; font-size:13px}
   input:focus,select:focus{outline:1px solid var(--blue)}
-  button{border:none; border-radius:6px; padding:8px 16px; font-weight:600; cursor:pointer; font-size:13px}
+  button{border:none; border-radius:8px; padding:8px 16px; font-weight:600; cursor:pointer; font-size:13px; white-space:nowrap}
   button:disabled{opacity:.45; cursor:not-allowed}
-  .btn-start{background:#238636; color:#fff} .btn-stop{background:#b62324; color:#fff}
-  .btn-save{background:#1f6feb; color:#fff} .btn-panic{background:#4a1415; color:#ff7b72}
-  button:hover{filter:brightness(1.15)}
-  .banner{padding:10px 12px; border-radius:8px; margin-bottom:12px; font-size:13px}
-  .banner.err{background:#3a1d1d; color:#ffd7d3; border:1px solid var(--red)}
-  .banner.warn{background:#3a2e10; color:#f8e3a1; border:1px solid var(--amber)}
-  #log{font:11px/1.6 Consolas,monospace; color:var(--dim); max-height:180px; overflow-y:auto}
-  .muted{color:var(--dim)}
+  .btn-start{background:var(--green); color:#0f2a20} .btn-stop{background:var(--red); color:#3a1c26}
+  .btn-save{background:var(--blue); color:#14264d} .btn-panic{background:var(--amber); color:#3a2f10}
+  button:hover{filter:brightness(1.08)}
+  .banner{padding:10px 12px; border-radius:10px; margin-bottom:12px; font-size:13px}
+  .banner.err{background:#3d2331; color:#ffd7db; border:1px solid var(--red)}
+  .banner.warn{background:#332e18; color:#f7e6b0; border:1px solid var(--amber)}
+  #log{font:11px/1.6 Consolas,monospace; color:var(--dim); max-height:180px; overflow-y:auto}  .muted{color:var(--dim)}
 </style>
 </head>
 <body>
@@ -49,16 +59,20 @@
   <h1>MT5 Auto Trading Bot</h1>
 
   <div class="row" id="header">
-    <div class="panel" style="flex:1; display:flex; gap:28px; align-items:center; flex-wrap:wrap">
-      <div id="conn"></div>
-      <div class="stat"><b id="st-balance">-</b><span>Balance</span></div>
-      <div class="stat"><b id="st-equity">-</b><span>Equity</span></div>
-      <div class="stat"><b id="st-float">-</b><span>Floating PnL</span></div>
-      <div class="stat"><b id="st-basketpnl">-</b><span>PnL Basket (bot)</span></div>
-      <div class="stat"><b id="st-cycles">0</b><span>Cycles ditutup</span></div>
-      <div class="stat"><b id="st-dd-today" class="muted">-</b><span>Drawdown Hari Ini</span></div>
-      <div class="stat"><b id="st-dd-all" class="muted">-</b><span>Max Drawdown</span></div>
-      <div class="stat"><b id="st-uptime" class="muted">-</b><span>Uptime bot</span></div>
+    <div class="panel" style="flex:1">
+      <div id="conn" style="margin-bottom:10px"></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <div class="metric m-royal"><span>Balance</span><b id="st-balance">-</b></div>
+        <div class="metric m-sky"><span>Equity</span><b id="st-equity">-</b></div>
+        <div class="metric m-turq"><span>Floating PnL</span><b id="st-float">-</b></div>
+        <div class="metric m-mint"><span>PnL Basket (bot)</span><b id="st-basketpnl">-</b></div>
+        <div class="metric m-amber"><span>Cycles ditutup</span><b id="st-cycles">0</b></div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px">
+        <div class="metric m-plain"><span>Drawdown Hari Ini</span><b id="st-dd-today">-</b></div>
+        <div class="metric m-plain"><span>Max Drawdown</span><b id="st-dd-all">-</b></div>
+        <div class="metric m-plain"><span>Uptime bot</span><b id="st-uptime">-</b></div>
+      </div>
     </div>
   </div>
 
@@ -102,22 +116,24 @@
     </div>
   </div>
 
-  <div class="panel" style="margin-top:12px">
-    <h2>Posisi Bot (magic <span id="magiclbl">-</span>)</h2>
-    <table>
-      <thead><tr><th>Ticket</th><th>Type</th><th>Lot</th><th>Entry</th><th>Now</th><th>PnL</th></tr></thead>
-      <tbody id="posrows"></tbody>
-    </table>
-    <div id="nopos" class="muted" style="padding:8px">Belum ada posisi milik bot.</div>
-  </div>
+  <div class="row" style="margin-top:12px">
+    <div class="panel" style="flex:1 1 320px; min-width:300px">
+      <h2>Posisi Bot (magic <span id="magiclbl">-</span>)</h2>
+      <table>
+        <thead><tr><th>Ticket</th><th>Type</th><th>Lot</th><th>Entry</th><th>Now</th><th>PnL</th></tr></thead>
+        <tbody id="posrows"></tbody>
+      </table>
+      <div id="nopos" class="muted" style="padding:8px">Belum ada posisi milik bot.</div>
+    </div>
 
-  <div class="panel" style="margin-top:12px">
-    <h2>Riwayat Basket Ditutup</h2>
-    <table>
-      <thead><tr><th>Waktu</th><th>Symbol</th><th>Arah</th><th>Layer</th><th>Total Lot</th><th>PnL</th><th>Note</th></tr></thead>
-      <tbody id="histrows"></tbody>
-    </table>
-    <div id="nohist" class="muted" style="padding:8px">Belum ada basket yang ditutup.</div>
+    <div class="panel" style="flex:1 1 320px; min-width:300px">
+      <h2>Riwayat Basket Ditutup</h2>
+      <table>
+        <thead><tr><th>Waktu</th><th>Arah</th><th>Layer</th><th>Lot</th><th>PnL</th><th>Note</th></tr></thead>
+        <tbody id="histrows"></tbody>
+      </table>
+      <div id="nohist" class="muted" style="padding:8px">Belum ada basket yang ditutup.</div>
+    </div>
   </div>
 
   <div class="panel" style="margin-top:12px">
@@ -195,8 +211,7 @@ async function tick(){
     $('st-equity').textContent = s.account.equity != null ? s.account.equity.toFixed(2) : '-';
     const floatPnl = (s.account.equity != null && s.account.balance != null) ? s.account.equity - s.account.balance : null;
     const fp = $('st-float'); fp.textContent = floatPnl == null ? '-' : fmtMoney(floatPnl); fp.className = floatPnl >= 0 ? 'pos' : 'neg';
-    const bp = $('st-basketpnl'); bp.textContent = fmtMoney(s.basket.pnl); bp.className = cls(s.basket.pnl);
-    $('st-cycles').textContent = s.cycles;
+    const bp = $('st-basketpnl'); bp.textContent = fmtMoney(s.basket.pnl); bp.className = cls(s.basket.pnl);    $('st-cycles').textContent = s.cycles;
     const ddt = s.dd_today || {}, dda = s.dd_all || {};
     $('st-dd-today').textContent = `-$${(ddt.max_dd || 0).toFixed(2)} (${(ddt.max_dd_pct || 0).toFixed(1)}%)`;
     $('st-dd-today').className = (ddt.max_dd || 0) > 0 ? 'neg' : 'muted';
@@ -228,7 +243,7 @@ async function tick(){
 
     const hist = s.history || [];
     $('histrows').innerHTML = hist.slice(0, 20).map(h =>
-      `<tr><td>${h.t}</td><td>${h.symbol}</td><td>${h.dir}</td><td>${h.layers}</td><td>${h.volume}</td><td class="${cls(h.pnl)}">${fmtMoney(h.pnl)}</td><td class="muted">${h.note || ''}</td></tr>`
+      `<tr><td>${h.t.slice(11)}</td><td>${h.dir}</td><td>${h.layers}</td><td>${h.volume}</td><td class="${cls(h.pnl)}">${fmtMoney(h.pnl)}</td><td class="muted">${h.note || ''}</td></tr>`
     ).join('');
     $('nohist').style.display = hist.length ? 'none' : 'block';
 
