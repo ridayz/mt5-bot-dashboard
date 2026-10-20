@@ -610,6 +610,23 @@ class Handler(BaseHTTPRequestHandler):
                     record_history(eff0, poss, pnl, note="panic")
                 log("PANIC CLOSE ALL (%d posisi)" % len(poss))
                 return self._send(200, {"ok": True})
+            if act == "tp_basket":
+                # Lock profit manual: close SEMUA posisi basket SEKARANG (NO SL NO CL,
+                # tanpa menunggu target). Siklus baru mulai di tick berikutnya. Bot tetap jalan.
+                symbol = config["symbol"]
+                poss = get_positions(symbol)
+                if not poss:
+                    return self._send(200, {"ok": True, "closed": 0, "note": "tidak ada posisi basket"})
+                pnl = sum(p.profit + p.swap for p in poss)
+                eff0 = "BUY" if poss[0].type == mt5.POSITION_TYPE_BUY else "SELL"
+                ok_all = close_basket(poss, symbol, eff0, pnl, note="tp manual")
+                if ok_all:
+                    with LOCK:
+                        state["cycles"] += 1
+                        state["pnl_hist"] = []
+                        state["cycle_peak_pnl"] = 0.0
+                    log("TP BASKET MANUAL: semua posisi ditutup, PnL $%.2f, siklus baru" % pnl)
+                return self._send(200, {"ok": ok_all, "closed": len(poss), "pnl": round(pnl, 2)})
             return self._send(400, {"error": "action tidak dikenal"})
         return self._send(404, {"error": "not found"})
 

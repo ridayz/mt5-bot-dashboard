@@ -6,95 +6,136 @@
 <title>MT5 Auto Bot Dashboard</title>
 <style>
   :root{
-    /* campuran royal · sky · turquoise · mint (pastel on dark) */
-    --bg:#0e1730; --panel:#141f42; --border:#2f3d6e; --text:#eef3fb; --dim:#a3b4d6;
-    --green:#8fe8c0; --red:#ffb0c0; --amber:#f0d488; --blue:#8fbcff;
-    --royal:#22399e; --sky:#3d8fd4; --turq:#0d8e9c; --mint:#0a8c72;
-    --card-royal:#2f52cf; --card-sky:#3d8fd4; --card-turq:#0d8e9c; --card-mint:#0a8c72; --card-amber:#a8892a;
+    /* P2 — Biru Lembut (pastel, terang) */
+    --bg:#eaf3ff; --card:#ffffff; --border:#cfe2fb; --text:#16233a; --dim:#52657f;
+    --accent:#3d75dd;
+    --green:#1c8465; --green-bg:#e5f4ee; --green-bd:#bfe3d5;
+    --red:#bd4a60; --red-bg:#fbe9ee; --red-bd:#f0c9d3;
+    --amber:#8a6a1f; --amber-bg:#faf3df; --amber-bd:#ecd9a8;
+    --blue-soft:#eaf3ff; --blue-border:#cfe2fb;
+    --sh:0 2px 4px rgba(23,53,97,.04), 0 14px 34px -22px rgba(23,53,97,.34);
+    --r-card:18px; --r-in:10px; --r-ctrl:8px;
   }
   *{box-sizing:border-box; margin:0; padding:0}
-  body{background:var(--bg); color:var(--text); font:14px/1.45 "Segoe UI",system-ui,sans-serif; padding:14px}
+  body{background:var(--bg); color:var(--text); font:14px/1.45 "Plus Jakarta Sans","Segoe UI",system-ui,sans-serif; padding:16px}
+
+  /* Header biru lembut + navigasi atas */
+  header.top{
+    background:linear-gradient(120deg,#3d75dd 0%,#5a8bea 60%,#6f9bef 100%);
+    color:#fff; border-radius:var(--r-card); padding:14px 18px; box-shadow:var(--sh);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px;
+  }
+  header.top h1{font-size:18px; font-weight:800; letter-spacing:-.01em}
+  header.top .nav{display:flex; gap:8px; flex-wrap:wrap}
+  .nav .chip{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3); border-radius:999px;
+    padding:4px 12px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:6px}
+  .nav .chip .dot{width:8px; height:8px; border-radius:50%; background:#fff; opacity:.85}
+
   .row{display:flex; gap:12px; flex-wrap:wrap}
-  .panel{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px}
-  h1{font-size:17px; margin-bottom:10px; color:#eef3fb}
-  h2{font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:8px}
+  .panel{background:var(--card); border:1px solid var(--border); border-radius:var(--r-card); padding:14px; box-shadow:var(--sh)}
+  h2{font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:8px; font-weight:700}
+  .muted{color:var(--dim)}
+
   .pill{display:inline-block; padding:2px 10px; border-radius:999px; font-size:12px; font-weight:600}
-  .pill.on{background:#1c3d55; color:var(--blue)}
-  .pill.off{background:#3d2331; color:var(--red)}
-  .pill.demo{background:#1f3049; color:#cfe1ff}
-  .pill.live{background:#40262f; color:var(--red)}
+  .pill.on{background:var(--green-bg); color:var(--green); border:1px solid var(--green-bd)}
+  .pill.off{background:var(--red-bg); color:var(--red); border:1px solid var(--red-bd)}
+  .pill.demo{background:var(--blue-soft); color:var(--accent); border:1px solid var(--blue-border)}
+  .pill.live{background:var(--red-bg); color:var(--red); border:1px solid var(--red-bd)}
+
+  .metric{background:#f4f9ff; border-radius:var(--r-in); padding:12px 14px; min-width:130px; flex:1 1 140px;
+    border:1px solid var(--blue-border)}
+  .metric span{display:block; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--dim)}
+  .metric b{font-size:21px; font-variant-numeric:tabular-nums; color:var(--text); margin-top:2px}
+  .metric .pos{color:var(--green)} .metric .neg{color:var(--red)}
+  .metric.acc{background:var(--accent); border-color:var(--accent)}
+  .metric.acc span{color:rgba(255,255,255,.85)} .metric.acc b{color:#fff}
+
   .stat{display:flex; flex-direction:column; gap:2px; min-width:110px}
-  .stat b{font-size:20px; font-variant-numeric:tabular-nums}
+  .stat b{font-size:19px; font-variant-numeric:tabular-nums}
   .stat span{color:var(--dim); font-size:11px; text-transform:uppercase; letter-spacing:.05em}
-  .pos{color:var(--green)} .neg{color:var(--red)}
-  .metric .pos{color:#a8ffd8} .metric .neg{color:#ffc2cc} .metric .muted{color:#dbe6ff}  /* kartu metrik berwarna */
-  .metric{border-radius:12px; padding:12px 14px; min-width:130px; flex:1 1 140px; border:1px solid rgba(255,255,255,.1)}
-  .metric span{display:block; font-size:10px; text-transform:uppercase; letter-spacing:.06em; opacity:.9}
-  .metric b{font-size:21px; font-variant-numeric:tabular-nums; color:#f4f8ff}
-  .m-royal{background:var(--card-royal)} .m-sky{background:var(--card-sky)}
-  .m-turq{background:var(--card-turq)} .m-mint{background:var(--card-mint)}
-  .m-amber{background:var(--card-amber)} .m-plain{background:#1a2750}
+
   table{width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums}
-  td{white-space:nowrap}
-  th{color:var(--dim); font-size:11px; text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); text-transform:uppercase; letter-spacing:.05em}
-  td{padding:6px 8px; border-bottom:1px solid #283463}
-  .grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px}
-  label{display:block; font-size:11px; color:var(--dim); margin-bottom:3px}
-  input,select{width:100%; background-color:#101a38; border:1px solid var(--border); color:var(--text); border-radius:8px; padding:6px 8px; font-size:13px}
-  input:focus,select:focus{outline:1px solid var(--blue)}
-  button{border:none; border-radius:8px; padding:8px 16px; font-weight:600; cursor:pointer; font-size:13px; white-space:nowrap}
+  th{color:var(--dim); font-size:11px; text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);
+    text-transform:uppercase; letter-spacing:.05em}
+  td{padding:6px 8px; border-bottom:1px solid #e8f0fd; white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+
+  .grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px}
+  label{display:block; font-size:11px; color:var(--dim); margin-bottom:3px; font-weight:600}
+  input,select{width:100%; background-color:#f7fbff; border:1px solid var(--border); color:var(--text);
+    border-radius:var(--r-ctrl); padding:6px 8px; font-size:13px; font-family:inherit}
+  input:focus,select:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(61,117,221,.15)}
+
+  button{border:none; border-radius:var(--r-ctrl); padding:9px 16px; font-weight:700; cursor:pointer; font-size:13px;
+    white-space:nowrap; font-family:inherit; transition:filter .15s}
   button:disabled{opacity:.45; cursor:not-allowed}
-  .btn-start{background:var(--green); color:#0f2a20} .btn-stop{background:var(--red); color:#3a1c26}
-  .btn-save{background:var(--blue); color:#14264d} .btn-panic{background:var(--amber); color:#3a2f10}
-  button:hover{filter:brightness(1.08)}
-  .banner{padding:10px 12px; border-radius:10px; margin-bottom:12px; font-size:13px}
-  .banner.err{background:#3d2331; color:#ffd7db; border:1px solid var(--red)}
-  .banner.warn{background:#332e18; color:#f7e6b0; border:1px solid var(--amber)}
-  .tgl{display:inline-block; width:34px; height:18px; border-radius:9px; border:1px solid var(--border); background:#1a2750; cursor:pointer; position:relative; vertical-align:middle; padding:0}
-  .tgl::after{content:''; position:absolute; top:2px; left:2px; width:12px; height:12px; border-radius:50%; background:var(--dim); transition:left .15s}
-  .tgl.on{background:#0f3d33; border-color:#2ea043} .tgl.on::after{left:18px; background:var(--green)}
-  .tgl.off{background:#3d2331; border-color:var(--red)} .tgl.off::after{background:var(--red)}
+  button:hover:not(:disabled){filter:brightness(1.06)}
+  .btn-start{background:var(--green); color:#fff}
+  .btn-stop{background:#5b6b86; color:#fff}
+  .btn-save{background:var(--accent); color:#fff}
+  .btn-tp{background:var(--amber); color:#fff}
+  .btn-panic{background:var(--red); color:#fff}
+
+  .banner{padding:10px 12px; border-radius:var(--r-in); margin-bottom:12px; font-size:13px}
+  .banner.err{background:var(--red-bg); color:var(--red); border:1px solid var(--red-bd)}
+  .banner.warn{background:var(--amber-bg); color:var(--amber); border:1px solid var(--amber-bd)}
+  .banner.ok{background:var(--green-bg); color:var(--green); border:1px solid var(--green-bd)}
+
+  .tgl{display:inline-block; width:36px; height:20px; border-radius:10px; border:1px solid var(--border);
+    background:#eef3fb; cursor:pointer; position:relative; vertical-align:middle; padding:0}
+  .tgl::after{content:''; position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%;
+    background:#9db0c9; transition:left .15s}
+  .tgl.on{background:var(--green-bg); border-color:var(--green-bd)} .tgl.on::after{left:18px; background:var(--green)}
+  .tgl.off{background:var(--red-bg); border-color:var(--red-bd)} .tgl.off::after{background:var(--red)}
   .tgl-lbl{font-size:11px; color:var(--dim); vertical-align:middle; margin-left:4px}
   .lbl-tgl{margin-right:8px}
-  #log{font:11px/1.6 Consolas,monospace; color:var(--dim); max-height:180px; overflow-y:auto}  .muted{color:var(--dim)}
+
+  .pos{color:var(--green)} .neg{color:var(--red)}
+  #log{font:11px/1.6 Consolas,monospace; color:var(--dim); max-height:200px; overflow-y:auto}
+  .trend{background:var(--blue-soft); border:1px solid var(--blue-border); border-radius:var(--r-in);
+    padding:10px 12px; font-size:13px; color:var(--text); margin-top:10px}
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important; animation:none!important} }
 </style>
 </head>
 <body>
   <div id="banner"></div>
 
-  <h1>MT5 Auto Trading Bot</h1>
+  <header class="top">
+    <h1>MT5 Auto Trading Bot</h1>
+    <div class="nav" id="conn"></div>
+  </header>
 
   <div class="row" id="header">
-    <div class="panel" style="flex:1">
-      <div id="conn" style="margin-bottom:10px"></div>
+    <div class="panel" style="flex:1; min-width:300px">
+      <h2>Akun &amp; Ringkasan</h2>
       <div style="display:flex; gap:8px; flex-wrap:wrap">
-        <div class="metric m-royal"><span>Balance</span><b id="st-balance">-</b></div>
-        <div class="metric m-sky"><span>Equity</span><b id="st-equity">-</b></div>
-        <div class="metric m-turq"><span>Floating PnL</span><b id="st-float">-</b></div>
-        <div class="metric m-mint"><span>PnL Basket (bot)</span><b id="st-basketpnl">-</b></div>
-        <div class="metric m-amber"><span>Cycles ditutup</span><b id="st-cycles">0</b></div>
+        <div class="metric"><span>Balance</span><b id="st-balance">-</b></div>
+        <div class="metric"><span>Equity</span><b id="st-equity">-</b></div>
+        <div class="metric"><span>Floating PnL</span><b id="st-float">-</b></div>
+        <div class="metric"><span>PnL Basket (bot)</span><b id="st-basketpnl">-</b></div>
+        <div class="metric acc"><span>Cycles ditutup</span><b id="st-cycles">0</b></div>
       </div>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px">
-        <div class="metric m-plain"><span>Drawdown Hari Ini</span><b id="st-dd-today">-</b></div>
-        <div class="metric m-plain"><span>Max Drawdown</span><b id="st-dd-all">-</b></div>
-        <div class="metric m-plain"><span>Uptime bot</span><b id="st-uptime">-</b></div>
+        <div class="metric"><span>Drawdown Hari Ini</span><b id="st-dd-today">-</b></div>
+        <div class="metric"><span>Max Drawdown</span><b id="st-dd-all">-</b></div>
+        <div class="metric"><span>Uptime bot</span><b id="st-uptime">-</b></div>
       </div>
     </div>
   </div>
 
   <div class="row" style="margin-top:12px">
     <div class="panel" style="flex:3; min-width:330px">
-      <h2>Konfigurasi Bot <span style="text-transform:none;letter-spacing:0">· <span id="cfgmode" class="muted">berlaku live tanpa restart</span></span></h2>
+      <h2>Konfigurasi Bot <span class="muted" style="text-transform:none;letter-spacing:0"> · berlaku live tanpa restart</span></h2>
       <div id="toggles" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; align-items:center">
-        <span class="lbl-tgl">Trailing:</span><button class="tgl on" id="t-trail" title="Trailing Stop: OFF"></button>
-        <span class="lbl-tgl">Spike:</span><button class="tgl on" id="t-spike" title="Safety Spike: OFF"></button>
+        <span class="lbl-tgl">Trailing:</span><button class="tgl on" id="t-trail" title="Trailing Stop: ON"></button>
+        <span class="lbl-tgl">Spike:</span><button class="tgl on" id="t-spike" title="Safety Spike: ON"></button>
         <span class="lbl-tgl">Statis:</span><button class="tgl off" id="t-stat" title="Safety Statis: OFF"></button>
       </div>
       <div class="grid2">
         <div><label>Symbol</label><input id="c-symbol"></div>
         <div><label>Arah</label><select id="c-direction"><option value="AUTO">AUTO (ikut trend)</option><option>BUY</option><option>SELL</option></select></div>
         <div><label>Target Basket ($)</label><input id="c-basket_target" type="number" step="0.5"></div>
-        <div><label>Max Layer</label><input id="c-max_layers" type="number" min="1" max="50"></div>
+        <div><label>Max Layer</label><input id="c-max_layers" type="number" min="1" max="500"></div>
         <div><label>Lot Awal</label><input id="c-initial_lot" type="number" step="0.01" min="0.01"></div>
         <div><label>Multiplier Layer</label><input id="c-lot_multiplier" type="number" step="0.1" min="1"></div>
         <div><label>Jarak Layer (points)</label><input id="c-layer_step_points" type="number" step="10" min="10"></div>
@@ -105,12 +146,13 @@
         <div><label>Trailing (%)</label><input id="c-trail_pct" type="number" step="5" min="1" title="close kalau floating turun X% dari peak"></div>
         <div><label>Aktif setelah profit ($)</label><input id="c-trail_activate" type="number" step="1" min="0" title="trailing baru jalan setelah peak profit >= nilai ini"></div>
       </div>
-      <div class="row" style="margin-top:12px; gap:8px">
-        <button class="btn-start" id="b-start">▶ Start Bot</button>
-        <button class="btn-stop" id="b-stop">■ Stop Bot</button>
+      <div class="row" style="margin-top:12px; gap:8px; flex-wrap:wrap">
+        <button class="btn-start" id="b-start">Start Bot</button>
+        <button class="btn-stop" id="b-stop">Stop Bot</button>
+        <button class="btn-tp" id="b-tp">TP Basket Sekarang</button>
         <button class="btn-save" id="b-save">Simpan Config</button>
-        <button class="btn-panic" id="b-panic">🛑 Panic Close All</button>
-        <span id="runstate" class="muted"></span>
+        <button class="btn-panic" id="b-panic">Panic Close All</button>
+        <span id="runstate" class="muted" style="align-self:center"></span>
       </div>
     </div>
 
@@ -123,7 +165,7 @@
         <div class="stat"><b id="bk-next">-</b><span>Trigger layer berikut</span></div>
         <div class="stat"><b id="bk-peak">-</b><span>Peak floating siklus</span></div>
       </div>
-      <div id="trendline" class="muted" style="margin-top:10px; font-size:12px"></div>
+      <div id="trendline" class="trend"></div>
     </div>
   </div>
 
@@ -180,7 +222,8 @@ async function api(path, body){
   return r.json().catch(() => ({}));
 }
 
-function setTgl(id, on){ const e = $(id); e.className = 'tgl ' + (on ? 'on' : 'off'); e.setAttribute('title', e.getAttribute('title').split(':')[0] + ': ' + (on?'ON':'OFF')); }
+function setTgl(id, on){ const e = $(id); e.className = 'tgl ' + (on ? 'on' : 'off');
+  e.setAttribute('title', e.getAttribute('title').split(':')[0] + ': ' + (on?'ON':'OFF')); }
 
 let lastSpike = 0;
 $('t-trail').onclick = () => { const c = currentCfg(); c.trail_enabled = !c.trail_enabled; saveCfg(c); };
@@ -209,6 +252,10 @@ async function saveCfg(cfg){ await api('/api/config', cfg); }
 $('b-save').onclick = () => saveCfg(currentCfg());
 $('b-start').onclick = () => api('/api/action', {action:'start'});
 $('b-stop').onclick  = () => api('/api/action', {action:'stop'});
+$('b-tp').onclick = () => {
+  if (confirm('Tutup SEMUA posisi basket SEKARANG (lock profit manual, NO SL NO CL)?'))
+    api('/api/action', {action:'tp_basket'});
+};
 $('b-panic').onclick = () => {
   if (confirm('Tutup SEMUA posisi bot di symbol ini dan STOP bot?')) api('/api/action', {action:'panic'});
 };
@@ -218,25 +265,28 @@ async function tick(){
     const s = await (await fetch('/api/state')).json();
     // banner
     let b = '';
-    if (!s.mt5_available) b = `<div class="banner err">❌ ${s.error}</div>`;
-    else if (!s.connected) b = `<div class="banner err">❌ ${s.error || 'Terminal MT5 tidak terhubung.'}</div>`;
-    else if (s.account && s.account.is_demo === false) b = `<div class="banner warn">⚠️ Akun LIVE — hati-hati. Bot tetap bisa dijalankan.</div>`;
-    else if (s.account && s.account.is_demo === true) b = `<div class="banner warn" style="background:#10261a;color:#b8f0c6;border-color:#2ea043">🧪 Akun DEMO (${s.account.server||''})</div>`;
+    if (!s.mt5_available) b = `<div class="banner err">Paket MetaTrader5 belum terinstall.</div>`;
+    else if (!s.connected) b = `<div class="banner err">${s.error || 'Terminal MT5 tidak terhubung.'}</div>`;
+    else if (s.account && s.account.is_demo === false) b = `<div class="banner warn">Akun LIVE — hati-hati. Bot tetap bisa dijalankan.</div>`;
+    else if (s.account && s.account.is_demo === true) b = `<div class="banner ok">Akun DEMO (${s.account.server||''}) — aman untuk uji.</div>`;
     $('banner').innerHTML = b;
 
     $('conn').innerHTML = s.connected
-      ? `<span class="pill on">● MT5 Terhubung</span> <span class="pill ${s.account.is_demo?'demo':'live'}">${s.account.is_demo?'DEMO':'LIVE'}</span>`
-      : '<span class="pill off">● MT5 Terputus</span>';
+      ? `<span class="chip"><span class="dot"></span>MT5 Terhubung</span>
+         <span class="chip ${s.account.is_demo?'demo':'live'}" style="color:#fff;border-color:rgba(255,255,255,.3)">${s.account.is_demo?'DEMO':'LIVE'}</span>`
+      : '<span class="chip" style="opacity:.7"><span class="dot" style="opacity:.5"></span>MT5 Terputus</span>';
+
     $('st-balance').textContent = s.account.balance != null ? s.account.balance.toFixed(2) : '-';
     $('st-equity').textContent = s.account.equity != null ? s.account.equity.toFixed(2) : '-';
     const floatPnl = (s.account.equity != null && s.account.balance != null) ? s.account.equity - s.account.balance : null;
-    const fp = $('st-float'); fp.textContent = floatPnl == null ? '-' : fmtMoney(floatPnl); fp.className = floatPnl >= 0 ? 'pos' : 'neg';
-    const bp = $('st-basketpnl'); bp.textContent = fmtMoney(s.basket.pnl); bp.className = cls(s.basket.pnl);    $('st-cycles').textContent = s.cycles;
+    const fp = $('st-float'); fp.textContent = floatPnl == null ? '-' : fmtMoney(floatPnl); fp.className = cls(floatPnl||0);
+    const bp = $('st-basketpnl'); bp.textContent = fmtMoney(s.basket.pnl); bp.className = cls(s.basket.pnl);
+    $('st-cycles').textContent = s.cycles;
     const ddt = s.dd_today || {}, dda = s.dd_all || {};
     $('st-dd-today').textContent = `-$${(ddt.max_dd || 0).toFixed(2)} (${(ddt.max_dd_pct || 0).toFixed(1)}%)`;
-    $('st-dd-today').className = (ddt.max_dd || 0) > 0 ? 'neg' : 'muted';
+    $('st-dd-today').className = (ddt.max_dd || 0) > 0 ? 'neg' : '';
     $('st-dd-all').textContent = `-$${(dda.max_dd || 0).toFixed(2)} (${(dda.max_dd_pct || 0).toFixed(1)}%)`;
-    $('st-dd-all').className = (dda.max_dd || 0) > 0 ? 'neg' : 'muted';
+    $('st-dd-all').className = (dda.max_dd || 0) > 0 ? 'neg' : '';
     const up = s.uptime_sec || 0;
     $('st-uptime').textContent = up >= 3600 ? `${Math.floor(up/3600)}h ${Math.floor(up%3600/60)}m` : `${Math.floor(up/60)}m ${up%60}s`;
     $('runstate').textContent = s.running ? '● BOT JALAN' : '○ bot berhenti';
@@ -253,10 +303,12 @@ async function tick(){
       const mode = t.mode === 'manual' ? 'manual' : (t.mode === 'auto (terkunci)' ? 'AUTO (terkunci siklus ini)' : 'AUTO');
       const ema = t.fast != null ? ` — EMA14 ${t.fast} ${t.fast > t.slow ? '>' : '<'} EMA50 ${t.slow} (H1)` : '';
       $('trendline').textContent = `Arah entry: ${t.dir} [${mode}]${ema}`;
-    } else { $('trendline').textContent = ''; }
+      $('trendline').style.background = t.dir==='BUY' ? 'var(--green-bg)' : 'var(--amber-bg)';
+      $('trendline').style.color = t.dir==='BUY' ? 'var(--green)' : 'var(--amber)';
+      $('trendline').style.borderColor = t.dir==='BUY' ? 'var(--green-bd)' : 'var(--amber-bd)';
+    } else { $('trendline').textContent = 'Menunggu data trend…'; $('trendline').style.background='var(--blue-soft)'; $('trendline').style.color='var(--text)'; }
 
     $('magiclbl').textContent = '972025';
-    // sync status toggle
     const c = s.config;
     setTgl('t-trail', c.trail_enabled);
     setTgl('t-spike', c.spike_drop > 0);
