@@ -36,4 +36,6 @@ Bot layering (grid) + dashboard web lokal untuk **terminal MetaTrader 5 broker a
 
 - Config berlaku live tanpa restart bot.
 - Tombol **Panic Close All** = stop bot + close semua posisi bot.
+- `start.bat` otomatis restart bot kalau prosesnya berhenti (jendela jangan ditutup). Log lengkap tersimpan di `bot.log` (rotasi 2MB).
+- Jangan jalankan dua instance — kalau port 8940 sudah dipakai, instance baru akan bilang jelas dan keluar.
 - Equity ketat? Bot tidak punya stop-loss per posisi target — batasi `Max Layer` dan uji di **Demo** dulu.

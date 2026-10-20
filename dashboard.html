@@ -58,6 +58,7 @@
       <div class="stat"><b id="st-cycles">0</b><span>Cycles ditutup</span></div>
       <div class="stat"><b id="st-dd-today" class="muted">-</b><span>Drawdown Hari Ini</span></div>
       <div class="stat"><b id="st-dd-all" class="muted">-</b><span>Max Drawdown</span></div>
+      <div class="stat"><b id="st-uptime" class="muted">-</b><span>Uptime bot</span></div>
     </div>
   </div>
 
@@ -201,6 +202,8 @@ async function tick(){
     $('st-dd-today').className = (ddt.max_dd || 0) > 0 ? 'neg' : 'muted';
     $('st-dd-all').textContent = `-$${(dda.max_dd || 0).toFixed(2)} (${(dda.max_dd_pct || 0).toFixed(1)}%)`;
     $('st-dd-all').className = (dda.max_dd || 0) > 0 ? 'neg' : 'muted';
+    const up = s.uptime_sec || 0;
+    $('st-uptime').textContent = up >= 3600 ? `${Math.floor(up/3600)}h ${Math.floor(up%3600/60)}m` : `${Math.floor(up/60)}m ${up%60}s`;
     $('runstate').textContent = s.running ? '● BOT JALAN' : '○ bot berhenti';
     $('runstate').style.color = s.running ? 'var(--green)' : 'var(--dim)';
 

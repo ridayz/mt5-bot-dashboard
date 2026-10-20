@@ -4,8 +4,10 @@
 import json
 import logging
 import os
+import sys
 import threading
 import time
+from logging.handlers import RotatingFileHandler
 
 import numpy as np
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -22,6 +24,7 @@ PORT = 8940
 MAGIC = 972025
 LOCK = threading.RLock()
 LOG = logging.getLogger("mt5bot")
+PROCESS_START = time.time()
 
 DEFAULT_CONFIG = {
     "symbol": "XAUUSD",
@@ -42,6 +45,8 @@ DEFAULT_CONFIG = {
 
 state = {
     "mt5_available": MT5_OK,
+    "pid": os.getpid(),
+    "started_at": time.strftime("%Y-%m-%d %H:%M:%S"),
     "connected": False,
     "error": "" if MT5_OK else "Paket MetaTrader5 belum terinstall (python -m pip install MetaTrader5)",
     "running": False,
@@ -291,16 +296,32 @@ def get_positions(symbol):
 
 
 def close_basket(poss, symbol, eff, pnl, note):
-    """Close semua posisi basket, catat riwayat. Return True kalau semua sukses."""
+    """Close semua posisi basket dengan retry + verifikasi. Return True kalau semua sukses."""
     ok_all = True
     for p in list(poss):
-        ok, msg = close_position(p, symbol)
+        ok = False
+        msg = ""
+        for attempt in range(3):
+            try:
+                still = mt5.positions_get(ticket=p.ticket)
+            except Exception:
+                still = None
+            if not still:  # posisi sudah tidak ada = sudah tertutup
+                ok = True
+                break
+            ok, msg = close_position(p, symbol)
+            if ok:
+                break
+            time.sleep(0.2)
         if ok:
-            log("Close %s" % msg)
+            log("Close ticket=%s" % p.ticket)
         else:
             ok_all = False
-            log("FAIL close %s: %s" % (p.ticket, msg))
-    record_history(eff, poss, pnl, note=note)
+            log("FAIL close %s setelah 3 percobaan: %s" % (p.ticket, msg))
+    if ok_all:
+        record_history(eff, poss, pnl, note=note)
+    else:
+        log("WARN: basket belum semua tertutup, engine akan coba lagi di tick berikutnya")
     return ok_all
 
 
@@ -536,6 +557,7 @@ class Handler(BaseHTTPRequestHandler):
                 snap["dd_today"] = dict(state["dd"]["daily"].get(
                     today, {"peak": 0.0, "max_dd": 0.0, "max_dd_pct": 0.0}))
                 snap["dd_all"] = dict(state["dd"]["all_time"])
+                snap["uptime_sec"] = int(time.time() - PROCESS_START)
                 snap["server_time"] = time.time()
             self._send(200, snap)
         else:
@@ -597,8 +619,13 @@ def main():
     load_dd()
     t = threading.Thread(target=engine_loop, daemon=True)
     t.start()
-    httpd = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
-    log("Dashboard: http://localhost:%s" % PORT)
+    try:
+        httpd = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+    except OSError as e:
+        log("GAGAL START: port %s sudah dipakai (%s). Mungkin bot sudah jalan di jendela lain." % (PORT, e))
+        print("Port %s sudah dipakai. Matikan instance lain dulu." % PORT)
+        return
+    log("Dashboard: http://localhost:%s (pid %s)" % (PORT, os.getpid()))
     print("MT5 Bot Dashboard -> http://localhost:%s  (Ctrl+C untuk stop)" % PORT)
     try:
         httpd.serve_forever()
@@ -607,5 +634,15 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    main()
+    log_path = os.path.join(BASE_DIR, "bot.log")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(message)s",
+        handlers=[RotatingFileHandler(log_path, maxBytes=2_000_000, backupCount=3, encoding="utf-8"),
+                  logging.StreamHandler(sys.stdout)],
+    )
+    try:
+        main()
+    except Exception:
+        LOG.exception("FATAL: proses berhenti karena exception tak tertangani")
+        raise
