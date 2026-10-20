@@ -1,0 +1,35 @@
+# MT5 Auto Trading Bot Dashboard
+
+Bot layering (grid) + dashboard web lokal untuk **terminal MetaTrader 5 broker apapun** (Demo atau Live).
+
+## Cara Jalanin (Windows)
+
+1. Masuk terminal MetaTrader 5, **login ke akun** (sarankan Demo dulu).
+2. Install paket jembatan ( sekali saja ):
+   ```
+   py -m pip install MetaTrader5
+   ```
+3. Double-click `start.bat` (atau `python bot.py`).
+4. Buka dashboard: **http://localhost:8940**
+
+## Logika Trading
+
+- **Auto-entry:** pas bot di-Start dan tidak ada posisi, langsung buka posisi pertama (arah sesuai config).
+- **Layering:** kalau harga jalan melawan di `Jarak Layer (points)`, buka layer baru (lot awal x multiplier per layer), max `Max Layer`.
+- **Exit:** seluruh basket di-close otomatis begitu **PnL basket >= Target ($)**, default **$5**. Lalu siklus baru mulai.
+- Semua posisi bot ditandai `magic 972025`, jadi aman campur dengan posisi manual / bot lain.
+
+## File
+
+| File | Isi |
+|---|---|
+| `bot.py` | jembatan MT5 + engine + web server (satu file) |
+| `dashboard.html` | UI (dikirim oleh bot.py di `http://localhost:8940`) |
+| `config.json` | config tersimpan, otomatis terbentuk pas Simpan Config |
+| `start.bat` | launcher Windows |
+
+## Catatan
+
+- Config berlaku live tanpa restart bot.
+- Tombol **Panic Close All** = stop bot + close semua posisi bot.
+- Equity ketat? Bot tidak punya stop-loss per posisi target — batasi `Max Layer` dan uji di **Demo** dulu.
